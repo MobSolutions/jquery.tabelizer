@@ -1,0 +1,63 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="jquery.tabelizer.js"></script>
+<link href="tabelizer.css" media="all" rel="stylesheet" type="text/css" />
+<script>
+$(document).ready(function(){
+	var table1 = $('#table1').tabelize({
+		/*onRowClick : function(){
+			alert('test');
+		}*/
+		fullRowClickable : true,
+		onReady : function(){
+			console.log('ready');
+		},
+		onBeforeRowClick :  function(){
+			console.log('onBeforeRowClick');
+		},
+		onAfterRowClick :  function(){
+			console.log('onAfterRowClick');
+		},
+		expandLevel: 3,
+	});
+	$(".btn").click(function(){
+		$('#table1').tabelize({ expandLevel: $(this).data('level') });
+	})
+});
+</script>
+
+<table id="table1" class="table table-condensed table-hover controller" style="width:100%">
+<thead><tr data-level="header" class="header"><th>Level</th><th class="data">Column 1</th><th class="data">Column 2</th><th class="data">Column 3</th></tr></thead>
+<tbody>
+
+	<tr data-child="1" data-level="1" id="level_1_a"><td>Level 1 A</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+		<tr data-child="1" data-level="2" id="level_2_a"><td>Level 2 A</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+			<tr data-child="1" data-level="3" id="level_3_a"><td>Level 3 A</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+				<tr data-child="0" data-level="4" id="level_4_a"><td>Level 4 A</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+				<tr data-child="0" data-level="4" id="level_4_b"><td>Level 4 B</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+			<tr data-child="1" data-level="3" id="level_3_b"><td>Level 3 B</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+				<tr data-child="0" data-level="4" id="level_4_c"><td>Level 4 C</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+				<tr data-child="0" data-level="4" id="level_4_d"><td>Level 4 D</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+				<tr data-child="0" data-level="4" id="level_4_e"><td>Level 4 E</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+				<tr data-child="0" data-level="4" id="level_4_f"><td>Level 4 F</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+				<tr data-child="1" data-level="4" id="level_4_g"><td>Level 4 G</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>	
+					<tr data-child="0" data-level="5" id="level_5_a"><td>Level 5 A</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>	
+		<tr data-child="0" data-level="2" id="level_2_b"><td>Level 2 B</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+	<tr data-child="1" data-level="1" id="level_1_b"><td>Level 1 B</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+		<tr data-child="1" data-level="2" id="level_2_c"><td>Level 2 C</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+			<tr data-child="1" data-level="3" id="level_3_c"><td>Level 3 C</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+				<tr data-child="0" data-level="4" id="level_4_h"><td>Level 4 H</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+				<tr data-child="0" data-level="4" id="level_4_i"><td>Level 4 I</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+				<tr data-child="0" data-level="4" id="level_4_j"><td>Level 4 J</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+			<tr data-child="0" data-level="3" id="level_3_d"><td>Level 3 D</td><td class="data">2</td><td class="data">2</td><td class="data">2</td></tr>
+</tbody>
+</table> 
+
+
+<button class="btn" data-level="1">Collapse All</button>
+<button class="btn" data-level="2">Expand Level 2</button>
+<button class="btn" data-level="3">Expand Level 3</button>
+<button class="btn" data-level="4">Expand Level 4</button>
+<button class="btn" data-level="100">Expand All</button>
+

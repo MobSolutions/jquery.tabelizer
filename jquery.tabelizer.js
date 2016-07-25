@@ -39,7 +39,7 @@
 		
 		var id = $row.attr('id');
 		
-		if (!row.hasClass('childless')){
+		if ($row.data('child')){
 			//Simple toggle for contract/expand logic
 			if ($row.hasClass('contracted')){
 				$row.removeClass('contracted').addClass('expanded');
@@ -179,6 +179,7 @@
 		//we want to find all rows of the caller table to apply the base classes to them and make them expandable
 		self.caller.find('tr').each( function(){
 			$row = $(this);
+			
 			//don't apply any logic tot the header row
 			if (!$row.hasClass('header')){
 				currentLevel = $row.data('level');
@@ -194,7 +195,7 @@
 				
 				//apply labels around the first column text, so that we can add in the controls and expander image
 				$firstCol = $($row.children('td')[0])
-				var firstColVal = '<div class="label">' + $firstCol.html() + '</div>';
+				var firstColVal = '<div class="row-label">' + $firstCol.html() + '</div>';
 				var parentLevels = 0;
 				
 				//add in the line control div, add it in for every level up until your current level, this is to ensure we can show all the needed lines.
@@ -204,25 +205,56 @@
 				}
 				levelLines += '</div>'
 				//Add the expanded class, which through css adds in the arrow image
-				$firstCol.html(levelLines + ' <div class="expander"></div> ' + firstColVal);
+				$firstCol.html(levelLines + ' <div class="expander ' + ($row.data('child')?'':'hidden') + '"></div> ' + firstColVal);
 				 
 				//apply the method to be called on each row click, if fullRowClickable is set to false, then only the expander is clickable
 				if (self.conf.fullRowClickable)
 					$row.on('click', self.conf.onRowClick);
 				else
 					$row.find('.expander').on('click', self.conf.onRowClick);
+					
 				prevLevel = currentLevel;
 				$prevRow= $row;
 			}
 		});
 		
-		self.updateLines();
+		// Expand
+		self.expand();
+		
+		//self.updateLines();
 		
 		if (typeof self.conf.onReady != 'undefined' && self.isFunction(self.conf.onReady))
 			self.conf.onReady.apply(self.getPublicObj(), []);
 			
 		return self.getPublicObj();
-	}
+	};
+	
+	self.expand = function(){
+
+		self.caller.find('tr').each( function(){
+			var $row = $(this);
+			var id = $row.attr('id');
+			var currentLevel = $row.data('level');
+
+			if (!$row.hasClass('header')) {
+				if (currentLevel < self.conf.expandLevel) {			
+					if ($row.hasClass('contracted') && $row.data('child')){
+						$row.removeClass('contracted').addClass('expanded');
+						self.toggleChildren(id, true);
+					}
+				} else {
+					if ($row.hasClass('expanded')){
+						$row.removeClass('expanded').addClass('contracted');
+						self.toggleChildren(id, false);
+					}
+				}
+			}
+		});
+		
+		self.updateLines();
+		
+		return;
+	};
 	
 	self.getPublicObj = function(){ return {
 		options : self.conf,
@@ -238,7 +270,8 @@
 		fullRowClickable : true,//must be set before init
 		onBeforeRowClick : null,
 		onAfterRowClick : null,
-		onReady : null
+		onReady : null,
+		expandLevel: 100
 	};
 	
 	$.fn.tabelize = function(confProp){
@@ -251,7 +284,11 @@
 			
 		}else{
 			self = existingSelf;
+			var lastExpandLevel = self.conf.expandLevel;
 			$.extend(self.conf, confProp);
+			if (typeof confProp.expandLevel !== "undefined" && confProp.expandLevel !== lastExpandLevel) {
+				self.expand();
+			}
 		}
 		//Store copy of self in data for repeat calls, update it after any repeating call
 		self.updateData();
